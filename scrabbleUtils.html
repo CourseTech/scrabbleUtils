@@ -15,7 +15,7 @@
  *                    false otherwise.
  */
 function canConstructWord(availableTiles, word) {
-    let obj = {}
+    let obj = {};
     let flag = true;
     let str = '';
     let copyTiles = JSON.parse(JSON.stringify(availableTiles));
@@ -23,7 +23,6 @@ function canConstructWord(availableTiles, word) {
     for(tile in copyTiles) {
         str.concat(tile);
     }
-    
     word.split('').forEach((letter) => {
         if (!(letter in obj)) {
             obj[letter] = 1;
@@ -31,7 +30,6 @@ function canConstructWord(availableTiles, word) {
             obj[letter]++;
         }
     })
-
     for (objTile in obj) {
         if(!(objTile in copyTiles) && !('*' in copyTiles)) {
             flag = false;
@@ -57,10 +55,26 @@ function canConstructWord(availableTiles, word) {
             }
         }
     }
-
     return flag;
 }
 
+console.assert(canConstructWord({a: 1, c: 1, t: 1}, "cat") === true);
+console.assert(canConstructWord({a: 1, c: 1, t: 0}, "cat") === false);
+console.assert(canConstructWord({a: 1, c: 1, '*': 1}, "cat") === true);
+console.assert(canConstructWord({'*': 3}, "cat") === true);
+console.assert(canConstructWord({'*': 2}, "cat") === false);
+console.assert(canConstructWord({a: 0, c: 1, '*': 1}, "cat") === false);
+
+/**
+ * We define the base score of a word as the score obtained by 
+ * adding each letter's score, without taking board position
+ * into account. This function will compute and return the base
+ * score of a given word.
+ * 
+ * @param {string} word The word that will be used to compute 
+ *                      the base score.
+ * @returns {number} The base score for the given word.
+ */
 function baseScore(word) {
     const scores = {e: 1, a: 1, i: 1, o: 1, n: 1, r: 1, t: 1, l: 1, s: 1, u: 1, d: 2, g: 2, b: 3, c: 3, m: 3, p: 3, f: 4, h: 4, v: 4, w: 4, y: 4, k: 5, j: 8, x: 8, q: 10, z: 10, '*': 0};
     let baseScore = 0;
@@ -72,12 +86,13 @@ function baseScore(word) {
             baseScore += 0;
         }
     })
-
     return baseScore;
-
 }
 
-
+console.assert(baseScore('hello') === 8);
+console.assert(baseScore('aeiou') === 5);
+console.assert(baseScore('aeiouz') !== 5);
+console.assert(baseScore('hello*') === 8);
 
 </script>
 </html>
