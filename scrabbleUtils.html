@@ -1,0 +1,84 @@
+<html>
+<head>
+    <title>Scrabble</title>
+</head>
+<script>
+
+    /**
+ * This function checks whether a given word can be constructed with the available tiles.
+ * The availableTiles object should not be modified.
+ * 
+ * @param {Object<string, number>} availableTiles A collection of available 
+ *                                 tiles and their frequency.
+ * @param {string} word The word a player wants to construct.
+ * @returns {boolean} true if the word can be constructed with the available tiles;
+ *                    false otherwise.
+ */
+function canConstructWord(availableTiles, word) {
+    let obj = {}
+    let flag = true;
+    let str = '';
+    let copyTiles = JSON.parse(JSON.stringify(availableTiles));
+
+    for(tile in copyTiles) {
+        str.concat(tile);
+    }
+    
+    word.split('').forEach((letter) => {
+        if (!(letter in obj)) {
+            obj[letter] = 1;
+        } else {
+            obj[letter]++;
+        }
+    })
+
+    for (objTile in obj) {
+        if(!(objTile in copyTiles) && !('*' in copyTiles)) {
+            flag = false;
+        }
+        if(!(objTile in copyTiles) && ('*' in copyTiles)) {
+            if (copyTiles['*'] - obj[objTile] >= 0) {
+                copyTiles['*'] = copyTiles['*'] - obj[objTile];
+            } else {
+                flag = false;
+            }
+        } 
+        if (objTile in copyTiles) {
+            if (copyTiles[objTile] >= obj[objTile]) {
+                if ((copyTiles[objTile] - obj[objTile]) >= 0) {
+                    copyTiles[objTile] = copyTiles[objTile] - obj[objTile];
+                } else if ((copyTiles[objTile] + copyTiles['*'] - obj[objTile]) >= 0) {
+                    copyTiles['*'] = copyTiles['*'] - (obj[objTile] - copyTiles[objTile]);
+                } else {
+                    flag = false;
+                }
+            } else {
+                flag = false;
+            }
+        }
+    }
+
+    return flag;
+}
+
+function baseScore(word) {
+    const scores = {e: 1, a: 1, i: 1, o: 1, n: 1, r: 1, t: 1, l: 1, s: 1, u: 1, d: 2, g: 2, b: 3, c: 3, m: 3, p: 3, f: 4, h: 4, v: 4, w: 4, y: 4, k: 5, j: 8, x: 8, q: 10, z: 10, '*': 0};
+    let baseScore = 0;
+
+    word.split('').forEach((letter) => {
+        if ((letter in scores)) {
+            baseScore += scores[letter];
+        } else {
+            baseScore += 0;
+        }
+    })
+
+    return baseScore;
+
+}
+
+
+
+</script>
+</html>
+
